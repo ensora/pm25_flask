@@ -16,7 +16,7 @@
     </head>
     <header>
   <div class="container">
-    <h1 class="logo">Edge PM2.5 Predictive Analysis 2</h1>
+    <h1 class="logo">Edge PM2.5 Predictive Analysis </h1>
       </div>
 </header>
 
@@ -32,7 +32,7 @@
       <script>
       const serviceUuid = "4798e0f2-1111-4d68-af64-8a8f5258404e";
       let myCharacteristic;
-      let myValue = 0;
+      let myValue = 0.0;
       let myBLE;
       var pm25 = 0;
       var pred = 0;
@@ -59,7 +59,7 @@
           //rollPeriod: 10,
           drawPoints: true,
           //showRoller: true,
-          valueRange: [0, 45],
+          valueRange: [0, 20],
           labels: ['Time', 'PM2.5', 'PredPm2.5'],
           colors: ['#3B3B98', '#ff5e57', '#1dd1a1'],
           fillGraph: true,
@@ -91,7 +91,6 @@
         // Create a 'Connect' button
         const connectButton = createButton('Connect');
         connectButton.position(10, 150);
-        //connectButton.size(50, 100);
     
         connectButton.mousePressed(connectToBle);
 
@@ -127,11 +126,11 @@
         console.log('value: ', value);
 		plot(parseFloat(value));
         myValue = value;
-        var pm25 = myValue.split('|');
-        pm25 = pm25[0];
-        pred = pm25[1];
-        console.log('PM25: ', pm25);
-        plot(parseFloat(pm25[0]), parseFloat(pm25[1]));
+        var values = myValue.split('|');
+        pm25 = values[0];
+        pred = values[1];
+        console.log('PM25: ', values);
+        plot(parseFloat(pm25), parseFloat(pred));
         // After getting a value, call p5ble.read() again to get the value again
         myBLE.read(myCharacteristic, 'string', gotValue);
       }
