@@ -1,0 +1,88 @@
+header {
+  background-color: #32BBDC;
+  height: 100px;
+  width: 100%;
+  opacity: .9;
+  margin-bottom: 30px;
+}
+header h1.logo {
+  margin: 4;
+  font-size: 2em;
+  color: #102027;
+  text-transform: uppercase;
+  float: left;
+}
+
+/*
+ * Centering the body content
+ */
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+div.home {
+  margin: 4;
+  padding: 30px 0 30px 0;
+  background-color: #32BBDC;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
+div.about {
+  margin: 4;
+  padding: 30px 0 30px 0;
+  background-color: #32BBDC;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+ div.about:hover {
+  color: #37474f;
+  text-decoration: none;
+}
+
+.menu {
+  float: right;
+  margin-top: 8px;
+    /*text-align:center;*/
+  /*the same margin which is every button have, it is for small screen, and if you have many buttons.*/
+  margin-left:-10px;
+  marin-right:-10px;
+}
+.menu li {
+  display: inline;
+}
+.menu li + li {
+  margin-left: 35px;
+}
+.menu li a {
+  margin: 3;
+  color: #102027;
+  text-decoration: none;
+}
+
+.app-button{
+    background-color: #01AAAD;
+    width: 150px;
+    margin:0 20px;
+    display:inline-block;
+    line-height: 60px;
+}
+
+body            { font-family: sans-serif; background: #37474f; color: #37474f; }
+a, h1, h2       { color: #37474f; }
+h1, h2          { margin: 0; }
+h2              { font-size: 0.8em; }
+
+
+.page           { margin: 2em auto; width: 35em; border: 5px solid #ccc;
+                  padding: 0.8em; background: white; }
+.flex-container {display: flex; flex-flow: row wrap;
+                    justify-content: center;}
+.div-flex       { text-align: center; padding: 2em;}
+.metanav        { text-align: right; font-size: 0.8em; padding: 0.3em;
+                  margin-bottom: 1em; background: #fafafa; }
+.flash          { background: #cee5F5; padding: 0.5em;
+                  border: 1px solid #aacbe2; }
+.error          { background: #f0d6d6; padding: 0.5em; }

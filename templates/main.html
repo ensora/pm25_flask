@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>PM2.5 Demo</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+      <script src="https://unpkg.com/p5ble@0.0.4/dist/p5.ble.js"></script>
+      
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+  <!-- <script src="smooth-plotter.js"></script> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" />
+
+    </head>
+    <header>
+  <div class="container">
+    <h1 class="logo">Edge PM2.5 Predictive Analysis 2</h1>
+      </div>
+</header>
+
+    <body>
+       <title>PM2.5 Demo</title>
+          <div class="div-flex">
+    <h3>Actual Vs. Predicted PM2.5 Values</h3></div>
+
+<form method=post action=/measurements/savepm>
+<input name=pmdata type=hidden value=""><input name=pred type=hidden value=""><input name=time type=hidden value=""><input type=submit value = "Save Values" >
+    <div style="height:5vh;"></div>
+        <div id="div_g" style="width:150vh; height:40vh;"></div>
+      <script>
+      const serviceUuid = "4798e0f2-1111-4d68-af64-8a8f5258404e";
+      let myCharacteristic;
+      let myValue = 0;
+      let myBLE;
+      var pm25 = 0;
+      var pred = 0;
+      var time = new Date();
+        
+      var data = [];
+    var g;
+    var dataPoints = 50;
+    //var plotFlag = true;
+
+    //Graphing
+    $(document).ready(function () {
+      //var data = [];
+      var t = new Date();
+      for (var i = dataPoints; i >= 0; i--) {
+        var x = new Date(t.getTime() - i * 1000);
+        data.push([x, NaN, NaN]);
+      }
+
+      g = new Dygraph(document.getElementById("div_g"), data,
+        {
+          //color: 'red',
+          strokeWidth: 2,
+          //rollPeriod: 10,
+          drawPoints: true,
+          //showRoller: true,
+          valueRange: [0, 6],
+          labels: ['Time', 'PM2.5', 'PredPm2.5'],
+          colors: ['#3B3B98', '#ff5e57', '#1dd1a1'],
+          fillGraph: true,
+          pointSize: 3,
+          stepPlot: false,
+          ylabel: "PM2.5 actual, pred"
+          //pixelsPerLabel: 10,
+        });
+    });
+
+    function plot(ax, ay) {
+      var d = new Date();  // current time
+      var x = ax;
+      var y = ay;
+      data.shift();
+      data.push([d, x, y]);
+      g.updateOptions({ 'file': data });
+
+    }
+
+      function setup() {
+        // Create a p5ble class
+        myBLE = new p5ble();
+
+        createCanvas(200, 200);
+        textSize(20);
+        textAlign(CENTER, CENTER);
+
+        // Create a 'Connect' button
+        const connectButton = createButton('Connect');
+        connectButton.position(10, 150);
+        //connectButton.size(50, 100);
+    
+        connectButton.mousePressed(connectToBle);
+
+        initInput()
+        
+      }
+
+      function initInput()
+        {
+        var time = new Date();
+        document.forms[0].pmdata.value = pm25;
+        document.forms[0].pred.value = pred;
+        document.forms[0].time.value = time;
+        }
+
+      function connectToBle() {
+        // Connect to a device by passing the service UUID
+        myBLE.connect(serviceUuid, gotCharacteristics);
+      }
+
+      // A function that will be called once got characteristics
+      function gotCharacteristics(error, characteristics) {
+        if (error) console.log('error: ', error);
+        console.log('characteristics: ', characteristics);
+        myCharacteristic = characteristics[0];
+        // Read the value of the first characteristic
+        myBLE.read(myCharacteristic, 'string', gotValue);
+      }
+
+      // A function that will be called once got values
+      function gotValue(error, value) {
+        if (error) console.log('error: ', error);
+        console.log('value: ', value);
+		plot(parseFloat(value));
+        myValue = value;
+        var pm25 = myValue.split('|');
+        pm25 = pm25[0];
+        pred = pm25[1];
+        console.log('PM25: ', pm25);
+        plot(parseFloat(pm25[0]), parseFloat(pm25[1]));
+        // After getting a value, call p5ble.read() again to get the value again
+        myBLE.read(myCharacteristic, 'string', gotValue);
+      }
+
+      function draw() {
+        background(250);
+        text(myValue, 100, 100);
+      }
+      </script>
+    </body>
+ 
+
+  </html>
